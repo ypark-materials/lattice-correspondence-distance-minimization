@@ -13,7 +13,6 @@ import numpy as np
 import os as os
 
 def genCorMat(dir_path, d):
-
     '''
     Generates all possible correspondance matrix given d and saves it in a file
 
@@ -30,7 +29,7 @@ def genCorMat(dir_path, d):
     # Initialize the correspondance matrix file
     elements = list(range(-d, d + 1))                   #all posible range of d
     n = 100000                                          #number of correspondance matrix in 1 file
-    Pdata = np.tile(np.eye(3), (n, 8, 1, 1))        #initialized correspondance matrix 
+    Pdata = np.tile(np.eye(3), (n, 8, 1, 1))            #initialized correspondance matrix 
 
     # Loops through all possible combinations of d in the elements of the correspondance matrix
     count = np.zeros(8, dtype=int)
@@ -74,12 +73,27 @@ def genCorMat(dir_path, d):
     return 0
 
 def saveCorMat(d):
+    '''
+    Determines the directory path the correspondance matrix file will be saved in which will be "./data/data_d*"
+
+    Parameters:
+        d (integer): 
+            maximum integer difference between the length between the unit cell parameter of the reference to transformed configuration
+
+    Returns:
+        int: Always returns 0 to indicate completion.
+    '''
+
+    # Fetches the directory path that the file will be saved in
     dir_path = os.getcwd() + '/data/data_d' + str(d)
 
+    # Checks if correspondance matrix file exists
     if not os.path.exists(dir_path):
+        # Makes directory and generates correspondance matrix file if path doesnt exist
         os.mkdir(dir_path)
         genCorMat(dir_path, d)
     else:
+        # Skips file generation if path exists
         print('COMPELTE: Correspondance matrix files for d = ', d, ' already exits at "', dir_path, '"')
 
     return 0
