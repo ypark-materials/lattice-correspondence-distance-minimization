@@ -56,15 +56,19 @@ def genCorMat(dir_path, d):
                                             count[detPint-1] += 1
 
                                             if count[detPint-1] > n-1:
-                                                np.save(f'{dir_path}/Pmat_d{d}_det{detPint}_{countSave[detPint-1]}.npy',
-                                                        Pdata[:, detPint-1, :, :].astype(np.int8))
+                                                filename = f'Pmat_d{d}_det{detPint}_{countSave[detPint-1]}.npy'
+                                                file_path = os.path.join(dir_path, filename)
+                                                np.save(file_path, Pdata[:, detPint-1, :, :].astype(np.int8))
 
                                                 countSave[detPint-1] += 1
                                                 count[detPint-1] = 0
 
     for i in range(8):
         Pdata_unique = np.unique(Pdata[:, i, :, :], axis=0)
-        np.save(f'{dir_path}/Pmat_d{d}_det{i+1}_{countSave[i]}.npy', Pdata_unique.astype(np.int8))
+
+        filename = f'Pmat_d{d}_det{i+1}_{countSave[i]}.npy'
+        file_path = os.path.join(dir_path, filename)
+        np.save(file_path, Pdata_unique.astype(np.int8))
 
     print('COMPLETE: Correspondance matricies for d = ', d, 'saved') 
     print('          Saved at file path "', dir_path, '"')
@@ -85,7 +89,7 @@ def saveCorMat(d):
     '''
 
     # Fetches the directory path that the file will be saved in
-    dir_path = os.getcwd() + '/data/data_d' + str(d)
+    dir_path = os.path.join(os.getcwd(), 'data', f'data_d{d}')
 
     # Checks if correspondance matrix file exists
     if not os.path.exists(dir_path):
