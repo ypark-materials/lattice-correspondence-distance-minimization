@@ -101,3 +101,36 @@ def saveCorMat(d):
         print('COMPELTE: Correspondance matrix files for d = ', d, ' already exits at "', dir_path, '"')
 
     return 0
+
+def readCorMat(d, det, n):
+    '''
+    Reads the correspondance matrix file with the given value of d
+
+    Parameters:
+        d (integer):
+            maximum integer difference between the length between the unit cell parameter of the reference to transformed configuration
+        det (integer):
+            
+    Returns:
+        corrmat (narray [shape (*, 3, 3)]):
+            correspondance matrix where * is the index of the matrix with elements 3, 3
+        check (integer):
+            checker for when all files for a given d and det are met
+    '''
+
+    dir_path = os.getcwd()
+    file_path = os.path.join(dir_path, 'data', f'data_d{d}', f'Pmat_d{d}_det{det}_{n}.npy')
+
+    if os.path.exists(file_path):
+        print('READING:')
+        print(' ', f'Pmat_d{d}_det{det}_{n}.npy')
+
+        corrmat = np.load(file_path)
+        check = 1
+    else:
+        print('READING:')
+        print(' completed')
+        corrmat = 0
+        check = 0
+
+    return corrmat, check
