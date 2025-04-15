@@ -70,9 +70,9 @@ def genCorMat(dir_path, d):
         file_path = os.path.join(dir_path, filename)
         np.save(file_path, Pdata_unique.astype(np.int8))
 
-    print('COMPLETE: Correspondance matricies for d = ', d, 'saved') 
-    print('          Saved at file path "', dir_path, '"')
-    print('          Total number of files = ', sum(countSave))
+    print(f'   COMPLETE: Correspondance matricies for d = {d} saved') 
+    print(f'             Saved at file path "{dir_path}"')
+    print(f'             Total number of files = {sum(countSave)} \n')
     
     return 0
 
@@ -92,45 +92,46 @@ def saveCorMat(d):
     dir_path = os.path.join(os.getcwd(), 'data', f'data_d{d}')
 
     # Checks if correspondance matrix file exists
+    print('Checking correspondance matrix file')
     if not os.path.exists(dir_path):
         # Makes directory and generates correspondance matrix file if path doesnt exist
+        print('File does not exist')
+        print('Generating correspondance matrix file')
         os.mkdir(dir_path)
         genCorMat(dir_path, d)
     else:
         # Skips file generation if path exists
-        print('COMPELTE: Correspondance matrix files for d = ', d, ' already exits at "', dir_path, '"')
+        print('   COMPELTE: Correspondance matrix files for d = ', d, ' already exits at "', dir_path, '" \n')
 
     return 0
 
-def readCorMat(d, det, n):
+def readCorMat(d, p, q):
     '''
     Reads the correspondance matrix file with the given value of d
 
     Parameters:
         d (integer):
             maximum integer difference between the length between the unit cell parameter of the reference to transformed configuration
-        det (integer):
+        p (integer):
+            determinant of reference configuration
+        q (integer):
+            determinant of deformed configuration
             
     Returns:
-        corrmat (narray [shape (*, 3, 3)]):
-            correspondance matrix where * is the index of the matrix with elements 3, 3
-        check (integer):
-            checker for when all files for a given d and det are met
+        file_path (string): 
+            directory for the folder with files with d
+        ref_files (list [shape (*, 1)]): 
+            directory for the files with files with d and p
+        def_files (ndarray [shape (*, 1)]): 
+            directory for the files with files with d and q
     '''
 
-    dir_path = os.getcwd()
-    file_path = os.path.join(dir_path, 'data', f'data_d{d}', f'Pmat_d{d}_det{det}_{n}.npy')
+    # Finds files for d
+    file_path = os.path.join(os.getcwd(), 'data', f'data_d{d}')
+    files = os.listdir(file_path)
 
-    if os.path.exists(file_path):
-        print('READING:')
-        print(' ', f'Pmat_d{d}_det{det}_{n}.npy')
+    # Finds files with the corresponding determinate for the reference and deformed
+    ref_files = [file for file in files if f'det{p}' in file]
+    def_files = [file for file in files if f'det{q}' in file]
 
-        corrmat = np.load(file_path)
-        check = 1
-    else:
-        print('READING:')
-        print(' completed')
-        corrmat = 0
-        check = 0
-
-    return corrmat, check
+    return file_path, ref_files, def_files
