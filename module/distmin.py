@@ -111,7 +111,7 @@ def loopDist(file_path, ref_files, def_files, reflat, deflat):
     print(' ' * 12, np.array2string(distFunc_stored, prefix=' ' * 12), '\n')
     return distFunc_stored, U_stored, P_ref_stored, P_def_stored
 
-def saveDist(distFunc, U, P_ref, P_def):
+def saveDist(distFunc, U, P_ref, P_def, abc_ref, abc_def, angle_ref, angle_def):
     '''
     Saves the three minimum distance function and its associated stretch tensor and correspondance matrix for each configuration
 
@@ -138,6 +138,14 @@ def saveDist(distFunc, U, P_ref, P_def):
     print(' ' * 12, np.array2string(P_ref, prefix=' ' * 12), '\n')
     print('   Correspondance matrix of the deformed configuration saved')
     print(' ' * 12, np.array2string(P_def, prefix=' ' * 12), '\n')
+    print('   Unit cell parameter abc for reference saved')
+    print(' ' * 12, np.array2string(abc_ref, prefix=' ' * 12), '\n')
+    print('   Unit cell parameter angle for reference saved')
+    print(' ' * 12, np.array2string(angle_ref, prefix=' ' * 12), '\n')
+    print('   Unit cell parameter abc for deformed saved')
+    print(' ' * 12, np.array2string(abc_def, prefix=' ' * 12), '\n')
+    print('   Unit cell parameter angle for deformed saved')
+    print(' ' * 12, np.array2string(angle_def, prefix=' ' * 12), '\n')
 
     # Saves the data with unique name
     counter = 0
@@ -158,8 +166,45 @@ def saveDist(distFunc, U, P_ref, P_def):
             P_ref=P_ref,
             P_def=P_def,
             U=U,
-            dist=distFunc)
+            dist=distFunc,
+            abc_ref = abc_ref, 
+            abc_def = abc_def, 
+            angle_ref = angle_ref,
+            angle_def =  angle_def)
 
     print(f'   COMPLETE: Calculated data stored as "stored_results{counter}.npz" \n')
 
     return 0
+
+def newLatt(reflat, deflat, P_ref, P_def):
+    '''
+    Saves the three minimum distance function and its associated stretch tensor and correspondance matrix for each configuration
+
+    Parameters:
+        distFunc_stored (ndarray [shape (3, 1)]):
+            distance function that is top three min
+        U_stored (ndarray [shape (3, 3, 3)]): 
+            stretch tensor with distance function that is top three min
+        P_ref_stored (ndarray [shape (3, 3, 3)]): 
+            correspondance matrix with distance function that is top three min
+        P_def_stored (ndarray [shape (3, 3, 3)]): 
+            correspondance matrix with distance function that is top three min
+
+    Returns:
+        int: Always returns 0 to indicate completion.
+    '''
+
+    new_reflat = P_ref @ reflat
+    new_deflat = P_def @ deflat
+    
+    abc_ref = np.array([np.linalg.norm(new_reflat[:,0]), np.linalg.norm(new_reflat[:,1]), np.linalg.norm(new_reflat[:,2])])
+    abc_def = np.array([np.linalg.norm(new_deflat[:,0]), np.linalg.norm(new_deflat[:,1]), np.linalg.norm(new_deflat[:,2])])
+
+    angle_ref = np.array([np.degrees(np.arccos(np.dot(new_reflat[:,1].flatten(), new_reflat[:,2].flatten()) / (abc_ref[1] * abc_ref[2]))), 
+                          np.degrees(np.arccos(np.dot(new_reflat[:,0].flatten(), new_reflat[:,2].flatten()) / (abc_ref[0] * abc_ref[2]))), 
+                          np.degrees(np.arccos(np.dot(new_reflat[:,0].flatten(), new_reflat[:,1].flatten()) / (abc_ref[0] * abc_ref[1])))])
+    angle_def = np.array([np.degrees(np.arccos(np.dot(new_deflat[:,1].flatten(), new_deflat[:,2].flatten()) / (abc_def[1] * abc_def[2]))), 
+                          np.degrees(np.arccos(np.dot(new_deflat[:,0].flatten(), new_deflat[:,2].flatten()) / (abc_def[0] * abc_def[2]))), 
+                          np.degrees(np.arccos(np.dot(new_deflat[:,0].flatten(), new_deflat[:,1].flatten()) / (abc_def[0] * abc_def[1])))])
+    
+    return abc_ref, abc_def, angle_ref, angle_def
