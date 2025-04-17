@@ -150,8 +150,8 @@ def readCorMat(d, p, q):
         print(f'   READING: m = {m}, so both determinant of p and q read')
 
     # Finds files with the corresponding determinate for the reference and deformed
-    ref_files = [file for file in files if f'det{q}' in file]
-    def_files = [file for file in files if f'det{p}' in file]
+    ref_files = [file for file in files if f'det{p}' in file]
+    def_files = [file for file in files if f'det{q}' in file]
 
     print(f'   COMPLETE: reference files read {ref_files}')
     print(f'             deformed files read {def_files}\n')
