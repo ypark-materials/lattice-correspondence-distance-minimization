@@ -69,10 +69,15 @@ def genCorMat(dir_path, d):
         filename = f'Pmat_d{d}_det{i+1}_{countSave[i]}.npy'
         file_path = os.path.join(dir_path, filename)
         np.save(file_path, Pdata_unique.astype(np.int8))
+    
+    Pdata0 = np.array([[[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]]])
+    filename = f'Pmat_d{d}_det{0}_{0}.npy'
+    file_path = os.path.join(dir_path, filename)
+    np.save(file_path, Pdata0.astype(np.int8))
 
     print(f'   COMPLETE: Correspondance matricies for d = {d} saved') 
     print(f'             Saved at file path "{dir_path}"')
-    print(f'             Total number of files = {sum(countSave)} \n')
+    print(f'             Total number of files = {sum(countSave)+9} \n')
     
     return 0
 
@@ -126,12 +131,28 @@ def readCorMat(d, p, q):
             directory for the files with files with d and q
     '''
 
+    print('Reading correspondance matrix data files')
+
     # Finds files for d
     file_path = os.path.join(os.getcwd(), 'data', f'data_d{d}')
     files = os.listdir(file_path)
+    # Checks which files to read
+    m = p/q
+    if int(m) == m:
+        p = int(0)
+        q = int(m)
+        print(f'   READING: m = {m}, only q read (reference has more atoms/molecules)')
+    elif int(1/m) == 1/m:
+        p = int(m)
+        q = int(0)
+        print(f'   READING: 1/m = {1/m}, only p read (deformed has more atoms/molecules)')
+    else:
+        print(f'   READING: m = {m}, so both determinant of p and q read')
 
     # Finds files with the corresponding determinate for the reference and deformed
-    ref_files = [file for file in files if f'det{p}' in file]
-    def_files = [file for file in files if f'det{q}' in file]
+    ref_files = [file for file in files if f'det{q}' in file]
+    def_files = [file for file in files if f'det{p}' in file]
 
+    print(f'   COMPLETE: reference files read {ref_files}')
+    print(f'             deformed files read {def_files}\n')
     return file_path, ref_files, def_files
