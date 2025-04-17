@@ -14,5 +14,6 @@ Calculation
 # Generates correspondance matricies if it doesnt exist in file
 cm.saveCorMat(d)
 
-data = np.load('your_file.npy')
-print(data)
+# Loads one of the the generated files
+file = os.path.join(os.getcwd(),'data', f'data_d{d}', f'Pmat_d{d}_det1_0.npy')
+P = np.load(file)
