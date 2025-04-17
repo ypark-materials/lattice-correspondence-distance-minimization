@@ -36,16 +36,15 @@ def calcDist(E_ref, E_def, P_ref, P_def):
     F = np.dot(E_def @ P_def, np.linalg.inv(E_ref @ P_ref))
 
     # Polar Decomposes the deformation gradiet to calculate the stretch tensor U
-    C = F.T@F
+    C = F.T @ F
     eig_val, eig_vec = np.linalg.eig(C)
     lam = np.sqrt(eig_val)
     U = lam[0]*np.outer(eig_vec[0],eig_vec[0]) + lam[1]*np.outer(eig_vec[1],eig_vec[1]) + lam[2]*np.outer(eig_vec[2],eig_vec[2])
 
     # Calculates the distance function defined by Chen et al. 
-    U_inv = np.linalg.inv(U) 
-    U_inv_sq = np.dot(U_inv, U_inv) 
-    A = U_inv_sq - np.eye(3)
-
+    U2 = U.T @ U
+    F2 = F.T @ F
+    A = np.linalg.inv(F2)- np.eye(3)
     distFunc = np.trace(A.T @ A)
 
     return distFunc, U
