@@ -8,17 +8,20 @@ from module import crystallo as cr
 '''
 Input
 '''
-d = 1
-p = 5
-q = 5
+# Number of atoms/molecules in unit cell
+p = 4 # reference phase
+q = 2 # deformed phase
 
 # Unit cell parameters of the reference configuration
-abc_ref = np.array([7.6, 8.58, 17.23])
-angle_ref = np.array([78.22, 86.71, 72.1])
+abc_ref = np.array([7.381, 11.755, 15.94])
+angle_ref = np.array([102.912, 92.025, 100.595])
 
 # Unit cell parameters of the deformed configuration
-abc_def = np.array([7.76, 7.74, 16.94])
-angle_def = np.array([77.80, 88.5, 82.2])
+abc_def = np.array([6.0552, 7.0297, 15.969])
+angle_def = np.array([96.315, 93.979, 90.279])
+
+# Largest edge ratio
+d = round(max(np.array([*abc_ref, *abc_def])) / min(np.array([*abc_ref, *abc_def])))
 
 '''
 Calculation
