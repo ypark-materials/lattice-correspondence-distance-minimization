@@ -143,7 +143,7 @@ def readCorMat(d, p, q):
         q = int(m)
         print(f'   READING: m = {m}, only q read (reference has more atoms/molecules)')
     elif int(1/m) == 1/m:
-        p = int(m)
+        p = int(1/m)
         q = int(0)
         print(f'   READING: 1/m = {1/m}, only p read (deformed has more atoms/molecules)')
     else:
