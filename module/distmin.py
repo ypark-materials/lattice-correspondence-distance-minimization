@@ -178,20 +178,27 @@ def saveDist(distFunc, U, P_ref, P_def, abc_ref, abc_def, angle_ref, angle_def):
 
 def newLatt(reflat, deflat, P_ref, P_def):
     '''
-    Saves the three minimum distance function and its associated stretch tensor and correspondance matrix for each configuration
-
+    Calculates the unit cell parameters with the lowest distance function value
+    
     Parameters:
-        distFunc_stored (ndarray [shape (3, 1)]):
-            distance function that is top three min
-        U_stored (ndarray [shape (3, 3, 3)]): 
-            stretch tensor with distance function that is top three min
-        P_ref_stored (ndarray [shape (3, 3, 3)]): 
-            correspondance matrix with distance function that is top three min
-        P_def_stored (ndarray [shape (3, 3, 3)]): 
-            correspondance matrix with distance function that is top three min
+        reflat (ndarray [shape (3, 3)]): 
+            lattice vector for the reference configuration
+        reflat (ndarray [shape (3, 3)]): 
+            lattice vector for the deformed configuration
+        P_ref (ndarray [shape (3, 3)]): 
+            correspondance matrix with distance function that is min
+        P_def (ndarray [shape (3, 3)]): 
+            correspondance matrix with distance function that is min
 
     Returns:
-        int: Always returns 0 to indicate completion.
+        abc_ref (ndarray [shape (1, 3)]): 
+            reference configuration unit cell parameter abc with min distance function
+        abc_def (ndarray [shape (1, 3)]): 
+            deformed configuration unit cell parameter abc with min distance function
+        angle_ref (ndarray [shape (1, 3)]): 
+            reference configuration unit cell parameter angles with min distance function
+        angle_def (ndarray [shape (1, 3)]): 
+            deformed configuration unit cell parameter angles with min distance function
     '''
 
     new_reflat = P_ref @ reflat
